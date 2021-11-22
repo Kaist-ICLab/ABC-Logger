@@ -303,20 +303,22 @@ class SurveyCollector(
         }
 
         val updateEntity = entity.copy(actualTriggerTime = timestamp)
+        entity.apply { timeoutUntil = actualTriggerTime + survey.timeout.toMillis() }
         put(updateEntity, isStatUpdates = false)    // temporary entity that will be notified but not be responded yet.
 
         responses.forEach {
             put(it, isStatUpdates = false)
         }
 
-        Log.d(javaClass, "trigger() at: $timestamp")
+        Log.d(javaClass, "trigger() at: $timestamp, timeoutUntil: ${entity.timeoutUntil}")
 
         NotificationRepository.notifySurvey(
             context = context,
             timestamp = timestamp,
             entityId = id,
             title = entity.title.text(isAltTextShown),
-            message = entity.message.text(isAltTextShown)
+            message = entity.message.text(isAltTextShown),
+            timeoutAfter = survey.timeout.toMillis()
         )
     }
 

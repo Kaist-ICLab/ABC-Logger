@@ -141,7 +141,8 @@ object NotificationRepository {
         timestamp: Long,
         entityId: Long,
         title: String,
-        message: String
+        message: String,
+        timeoutAfter: Long = 15*60*1000
     ) {
         val builder = getBuilder(context, CHANNEL_ID_SURVEY_TRIGGERED)
         val primaryColor = getColorFromAttr(context, R.attr.colorPrimary)
@@ -164,7 +165,7 @@ object NotificationRepository {
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(message))
             setGroup(GROUP_ID_SURVEY)
-            setTimeoutAfter(15*60*1000L)        // hard coded. need to fix this with expired time.
+            setTimeoutAfter(timeoutAfter)
         }.build()
 
         NotificationManagerCompat.from(context).notify(entityIdToTag(entityId), ID_SURVEY_TRIGGERED, ntf)
