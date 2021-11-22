@@ -13,7 +13,7 @@ object Preference : PreferenceHolder(name = "${BuildConfig.APPLICATION_ID}.Prefe
     var isAutoSync: Boolean by ReadWriteBoolean(default = true)
     var lastSignedEmail: String by ReadWriteString(default = "")
     var lastSignedName: String by ReadWriteString(default = "")
-    var groupName: String by ReadWriteString(default = "abc")
+    var groupName: String by ReadWriteString(default = "EG")
 
      /**
      * Belows are not presented to a user
