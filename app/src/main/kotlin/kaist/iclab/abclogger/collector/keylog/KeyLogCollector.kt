@@ -5,10 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import kaist.iclab.abclogger.collector.event.DeviceEventCollector
 import kaist.iclab.abclogger.collector.event.DeviceEventEntity
+import kaist.iclab.abclogger.collector.external.AbstractExternalSensorCollector
+import kaist.iclab.abclogger.collector.external.ExternalSensorEntity
+import kaist.iclab.abclogger.collector.external.PolarH10Collector
 import kaist.iclab.abclogger.ui.settings.keylog.KeyLogSettingActivity
 import kaist.iclab.abclogger.commons.*
 import kaist.iclab.abclogger.core.DataRepository
+import kaist.iclab.abclogger.core.Log
 import kaist.iclab.abclogger.core.collector.*
 import org.koin.android.ext.android.inject
 import java.util.*
@@ -78,6 +83,8 @@ class KeyLogCollector(
 
     class CollectorService : AccessibilityService() {
         private val collector: KeyLogCollector by inject()
+        //private val deviceEventCollector: DeviceEventCollector by inject()
+        private val externalSensorCollector: PolarH10Collector by inject()
 
         override fun onInterrupt() {}
 
@@ -86,6 +93,7 @@ class KeyLogCollector(
 
             val isChunjiin = collector.keyboardType == KEYBOARD_TYPE_CHUNJIIN
             val packageName = accessibilityEvent.packageName?.toString() ?: return
+            val className = accessibilityEvent.className?.toString() ?: return
             val source = accessibilityEvent.source ?: return
             val timestamp = System.currentTimeMillis()
             val eventTime = accessibilityEvent.eventTime
@@ -93,6 +101,7 @@ class KeyLogCollector(
 
             handleAccessibilityEvent(
                 packageName = packageName,
+                className = className,
                 source = source,
                 timestamp = timestamp,
                 eventTime = eventTime,
@@ -105,13 +114,45 @@ class KeyLogCollector(
 
         private fun handleAccessibilityEvent(
             packageName: String,
+            className: String,
             source: AccessibilityNodeInfo,
             timestamp: Long,
             eventTime: Long,
             eventType: Int,
             isChunjiin: Boolean
         ) = collector.launch {
+
+            val title = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                try { source.window.title.toString() }
+                catch (e: Exception) {
+                    "CANNOT_READ_TITLE"
+                }
+            } else {
+                "LOW_VERSION"
+            }
+
+            val windowinfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                try { source.window.toString() }
+                catch (e: Exception) {
+                    "CANNOT_READ_WINDOWINFO"
+                }
+            } else {
+                "LOW_VERSION"
+            }
+
+            val layerinfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                try { source.window.toString() }
+                catch (e: Exception) {
+                    "CANNOT_READ_LAYERINFO"
+                }
+            } else {
+                "LOW_VERSION"
+            }
+
+            var eventTypeString = "DEFAULT"
+
             if (hasMask(eventType, AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)) {
+                eventTypeString = "typeViewTextChanged"
                 trackNewInput(
                     node = source,
                     packageName = packageName,
@@ -128,6 +169,52 @@ class KeyLogCollector(
                         eventTime = eventTime,
                         prevKeyLog = null
                     )
+                )
+
+                eventTypeString = "typeViewFocused"
+            }
+
+            if (hasMask(eventType, AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED)) {
+                eventTypeString = "typeViewTextSelectionChanged"
+            }
+
+            /*
+            if (hasMask(eventType, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)) {
+                eventTypeString = "typeWindowContentChanged"
+            }
+             */
+
+            if (hasMask(eventType, AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)) {
+                eventTypeString = "typeWindowStateChanged"
+            }
+            if (hasMask(eventType, AccessibilityEvent.TYPE_WINDOWS_CHANGED)) {
+                eventTypeString = "typeWindowsChanged"
+            }
+
+            if (eventTypeString != "DEFAULT") {
+                val appName = getApplicationName(packageManager, packageName) ?: ""
+
+                val entity = ExternalSensorEntity(
+                    deviceType = eventTypeString,
+                    others = mapOf(
+                        "packageName" to packageName,
+                        "appName" to appName,
+                        "className" to className,
+                        "eventTime" to eventTime.toString(),
+                        "eventTypeInt" to eventType.toString(),
+                        "currentTime" to System.currentTimeMillis().toString(),
+                        "window" to windowinfo,
+                        "windowID" to source.windowId.toString(),
+                        "windowTitle" to title,
+                        "layer" to layerinfo,
+                    )
+                )
+                Log.d(javaClass, entity.toString())
+
+                externalSensorCollector.put(
+                    entity.apply {
+                        this.timestamp = timestamp
+                    }
                 )
             }
         }
@@ -174,10 +261,10 @@ class KeyLogCollector(
                     timeTaken = newKeyLog.eventTime - oldKeyLog.eventTime,
                     keyboardType = stringifyKeyboardType(collector.keyboardType),
                     prevKeyType = oldKeyLog.type.name,
-                    /*
+                    //*
                     prevKey = oldKeyLog.key,
                     currentKey = newKeyLog.key,
-                     */ // delete due to privacy concerns.
+                    // */ // delete due to privacy concerns.
                     currentKeyType = newKeyLog.type.name
                 )
                 collector.put(
