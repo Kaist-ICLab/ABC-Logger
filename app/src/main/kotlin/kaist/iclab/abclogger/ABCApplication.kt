@@ -17,7 +17,7 @@ class ABCApplication : Application() {
         startKoin {
             androidLogger(Level.NONE)
             androidContext(this@ABCApplication)
-//            modules(listOf(collectorModules, repositoryModules, viewModelModules))
+            modules(listOf(repositoryModules, collectorModules, viewModelModules))
         }
 
 //        GlobalScope.launch {

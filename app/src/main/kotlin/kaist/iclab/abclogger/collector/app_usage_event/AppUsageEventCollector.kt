@@ -15,7 +15,6 @@ import android.util.Log
 import androidx.core.content.getSystemService
 import kaist.iclab.abclogger.collector.Collector
 import kaist.iclab.abclogger.collector.goAsync
-import old.kaist.iclab.abclogger.commons.safeUnregisterReceiver
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
@@ -70,6 +69,7 @@ class AppUsageEventCollector(
                 appUsageEventRepository.insert(event.toAppUsageEvent(
                     queriedAt = currentTimestamp, utcOffset = utcOffset))
             }
+            previousTimestamp = currentTimestamp
         }catch (throwable: Throwable){
             Log.e(javaClass.name, "handleRetrieval(): $throwable")
         }
@@ -102,7 +102,7 @@ class AppUsageEventCollector(
     }
 
     override fun stop() {
-        context.safeUnregisterReceiver(receiver)
+        context.unregisterReceiver(receiver)
         alarmManager.cancel(intent)
     }
 }

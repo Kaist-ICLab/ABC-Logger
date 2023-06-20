@@ -14,7 +14,7 @@ import kaist.iclab.abclogger.collector.screen_event.ScreenEventDao
 @Database(version = 1, entities = [AppUsageEvent::class, ScreenEvent::class])
 abstract class ABCDatabase: RoomDatabase() {
     abstract fun appUsageDao(): AppUsageEventDao
-    abstract fun notificationDao(): NotificationEventDao
+//    abstract fun notificationDao(): NotificationEventDao
     abstract fun screenDao(): ScreenEventDao
 
     companion object {

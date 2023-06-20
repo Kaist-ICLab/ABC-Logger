@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.util.Log
 import kaist.iclab.abclogger.collector.Collector
 import kaist.iclab.abclogger.collector.goAsync
-import old.kaist.iclab.abclogger.commons.safeUnregisterReceiver
 import java.util.TimeZone
 
 /*
@@ -27,7 +26,7 @@ class ScreenEventCollector(
 
     override fun stop() {
         Log.d(javaClass.name, "stop()")
-        context.safeUnregisterReceiver(receiver)
+        context.unregisterReceiver(receiver)
     }
 
     private val receiver: BroadcastReceiver = object: BroadcastReceiver() {
