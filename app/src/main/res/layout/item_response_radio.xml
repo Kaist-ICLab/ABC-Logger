@@ -25,7 +25,7 @@
 
         <variable
             name="answer"
-            type="kaist.iclab.abclogger.collector.survey.InternalAnswer" />
+            type="kaist.iclab.abclogger.collector_old.survey.InternalAnswer" />
 
         <variable
             name="option"
@@ -66,7 +66,7 @@
                 android:layout_marginTop="@dimen/space_vert_margin"
                 android:paddingHorizontal="@dimen/space_horiz_padding">
 
-                <kaist.iclab.abclogger.view.RadioGroup
+                <old.kaist.iclab.abclogger.view_old.RadioGroup
                     answer="@={answer.main}"
                     enabled="@{isEnabled}"
                     isVertical="@{option.vertical}"

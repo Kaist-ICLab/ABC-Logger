@@ -25,7 +25,7 @@
 
         <variable
             name="answer"
-            type="kaist.iclab.abclogger.collector.survey.InternalAnswer" />
+            type="kaist.iclab.abclogger.collector_old.survey.InternalAnswer" />
 
         <variable
             name="option"
@@ -70,7 +70,7 @@
                 android:layout_marginTop="@dimen/space_vert_margin"
                 android:enabled="@{isEnabled}">
 
-                <kaist.iclab.abclogger.view.AutoCompleteTextView
+                <old.kaist.iclab.abclogger.view_old.AutoCompleteTextView
                     answer="@={answer.main}"
                     items="@{option.items}"
                     android:paddingHorizontal="@dimen/space_horiz_padding"

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/survey_all_list"
-        android:name="kaist.iclab.abclogger.ui.survey.list.SurveyAllListFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.survey.list.SurveyAllListFragment"
         android:label="@string/title_survey_list">
         <action
             android:id="@+id/action_survey_all_list_to_survey_response"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/survey_not_answered_list"
-        android:name="kaist.iclab.abclogger.ui.survey.list.SurveyNotAnsweredListFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.survey.list.SurveyNotAnsweredListFragment"
         android:label="@string/title_survey_unanswered_list">
         <action
             android:id="@+id/action_survey_not_answered_list_to_survey_response"
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/survey_answered_list"
-        android:name="kaist.iclab.abclogger.ui.survey.list.SurveyAnsweredListFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.survey.list.SurveyAnsweredListFragment"
         android:label="@string/title_survey_answered_list">
         <action
             android:id="@+id/action_survey_answered_list_to_survey_response"
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/survey_expired_list"
-        android:name="kaist.iclab.abclogger.ui.survey.list.SurveyExpiredListFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.survey.list.SurveyExpiredListFragment"
         android:label="@string/title_survey_expired_list">
         <action
             android:id="@+id/action_survey_expired_list_to_survey_response"
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/survey_response"
-        android:name="kaist.iclab.abclogger.ui.survey.response.SurveyResponseFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.survey.response.SurveyResponseFragment"
         android:label="@string/title_survey_response">
         <argument
             android:name="title"
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/config"
-        android:name="kaist.iclab.abclogger.ui.config.ConfigGeneralFragment"
+        android:name="old.kaist.iclab.abclogger.ui_old.config.ConfigGeneralFragment"
         android:label="@string/menu_bottom_config">
         <action
             android:id="@+id/action_config_to_config_collector"
@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/config_collector"
-        android:name="kaist.iclab.abclogger.ui.config.ConfigCollectorFragment">
+        android:name="old.kaist.iclab.abclogger.ui_old.config.ConfigCollectorFragment">
         <argument
             android:name="qualifiedName"
             app:argType="string" />

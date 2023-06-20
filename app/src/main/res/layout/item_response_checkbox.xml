@@ -25,7 +25,7 @@
 
         <variable
             name="answer"
-            type="kaist.iclab.abclogger.collector.survey.InternalAnswer" />
+            type="kaist.iclab.abclogger.collector_old.survey.InternalAnswer" />
 
         <variable
             name="option"
@@ -67,7 +67,7 @@
                 android:paddingBottom="@{isOthersShown ? 0F : @dimen/space_vert_padding}"
                 android:paddingHorizontal="@dimen/space_horiz_padding">
 
-                <kaist.iclab.abclogger.view.CheckBoxGroup
+                <old.kaist.iclab.abclogger.view_old.CheckBoxGroup
                     answer="@={answer.main}"
                     enabled="@{isEnabled}"
                     isVertical="@{option.vertical}"
